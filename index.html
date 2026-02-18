@@ -27,14 +27,17 @@
         .status-glow-red { box-shadow: 0 0 20px #f43f5e; }
         .status-glow-orange { box-shadow: 0 0 20px #f59e0b; }
         
-        /* Fixed height for KPI cards to prevent shifting */
         .kpi-card { height: 110px; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
+        
+        /* Accordion for advanced settings */
+        .settings-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .settings-open { max-height: 500px; }
     </style>
 </head>
 <body class="pb-20">
 
     <div class="max-w-xl mx-auto px-5 pt-10">
-        <!-- Header Personnalisé -->
+        <!-- Header -->
         <header class="mb-12 text-center animate-in fade-in zoom-in duration-700">
             <h1 class="text-5xl font-extrabold tracking-tighter mb-2 uppercase">Vigneux <span class="gradient-text">2030</span></h1>
             <div class="space-y-1">
@@ -44,14 +47,14 @@
             </div>
         </header>
 
-        <!-- Indicateurs Temps Réel (FIXED SIZE) -->
+        <!-- KPI Cards (Fixed sizes) -->
         <div class="grid grid-cols-3 gap-3 mb-10">
             <div class="glass rounded-3xl text-center border-b-4 border-blue-500 shadow-xl kpi-card">
                 <p class="text-[8px] font-bold text-slate-500 uppercase mb-1 tracking-widest px-1">CAF Nette</p>
                 <p id="metricCAF" class="text-lg font-black text-blue-400 truncate w-full">1.90 M€</p>
             </div>
             <div class="glass rounded-3xl text-center border-b-4 border-slate-700 shadow-xl kpi-card">
-                <p class="text-[8px] font-bold text-slate-500 uppercase mb-1 tracking-widest px-1 leading-tight">Désendettement</p>
+                <p class="text-[8px] font-bold text-slate-500 uppercase mb-1 tracking-widest px-1 leading-tight text-center">Désendettement</p>
                 <p id="metricDette" class="text-lg font-black text-white truncate w-full">7.2 ans</p>
             </div>
             <div class="glass rounded-3xl text-center shadow-xl kpi-card">
@@ -60,18 +63,16 @@
             </div>
         </div>
 
-        <!-- Panneau de Contrôle -->
-        <div class="glass p-8 rounded-[3rem] mb-10 space-y-12 border border-white/5 shadow-2xl">
-            <!-- Taxe -->
+        <!-- Main Controls -->
+        <div class="glass p-8 rounded-[3rem] mb-6 space-y-10 border border-white/5 shadow-2xl">
             <div class="space-y-5">
                 <div class="flex justify-between items-center">
-                    <label class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Levier Fiscal (Taxe Foncière)</label>
+                    <label class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Levier Fiscal</label>
                     <span id="taxVal" class="text-blue-400 font-black text-2xl tracking-tighter">+0%</span>
                 </div>
                 <input type="range" id="taxSlider" min="-5" max="15" value="0" step="0.5" class="w-full h-2 bg-slate-800 rounded-full appearance-none slider-custom">
             </div>
 
-            <!-- Investissement -->
             <div class="space-y-5">
                 <div class="flex justify-between items-center text-[11px] font-black uppercase text-slate-400 tracking-wider">
                     <label>Projets de Mandat (M€)</label>
@@ -80,7 +81,6 @@
                 <input type="range" id="investSlider" min="0" max="50" value="0" step="1" class="w-full h-2 bg-slate-800 rounded-full appearance-none slider-custom">
             </div>
 
-            <!-- Subventions -->
             <div class="space-y-5">
                 <div class="flex justify-between items-center text-[11px] font-black uppercase text-slate-400 tracking-wider">
                     <label>Co-financements (Aides)</label>
@@ -90,7 +90,31 @@
             </div>
         </div>
 
-        <!-- Courbe de Tendance -->
+        <!-- Advanced Informational Inputs (WoW Factor for technical credibility) -->
+        <div class="mb-10 px-2">
+            <button onclick="document.getElementById('advSettings').classList.toggle('settings-open')" class="w-full flex items-center justify-between text-[10px] font-black uppercase text-slate-500 tracking-[0.2em] py-2 border-b border-slate-800">
+                <span>Paramètres de Conjoncture (Expert)</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div id="advSettings" class="settings-content space-y-6 pt-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-[9px] font-bold text-slate-500 uppercase">Inflation / Énergie (%)</label>
+                        <input type="number" id="inflationInput" value="2.0" step="0.5" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-blue-500">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[9px] font-bold text-slate-500 uppercase">GVT (Masse Salariale %)</label>
+                        <input type="number" id="gvtInput" value="1.5" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-blue-500">
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[9px] font-bold text-slate-500 uppercase">Taux d'intérêt nouveaux emprunts (%)</label>
+                    <input type="number" id="rateInput" value="3.5" step="0.1" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-blue-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart -->
         <div class="glass p-8 rounded-[3rem] mb-10 border border-white/5 shadow-inner">
             <h3 class="text-[10px] font-black text-slate-500 uppercase mb-6 tracking-[0.3em] text-center">Évolution de l'Autofinancement (M€)</h3>
             <div class="h-44">
@@ -98,43 +122,39 @@
             </div>
         </div>
 
-        <!-- Bouton Action -->
+        <!-- Action Button -->
         <button id="wowBtn" class="w-full bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black py-6 rounded-[2.5rem] shadow-2xl shadow-blue-500/30 transition-all flex items-center justify-center gap-4 uppercase text-sm tracking-[0.2em]">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
             Audit Stratégique
         </button>
 
-        <!-- Zone de Sortie IA -->
+        <!-- Output Section -->
         <div id="aiSection" class="hidden mt-12 space-y-8 animate-in slide-in-from-bottom duration-1000">
-            <!-- Analyse -->
             <div id="aiContainer" class="glass p-10 rounded-[3.5rem] border-2 border-slate-700 shadow-3xl">
                 <div class="flex items-center gap-5 mb-10">
-                    <div class="w-14 h-14 bg-blue-500/10 rounded-3xl flex items-center justify-center text-blue-400 shadow-inner">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 2v4a2 2 0 002 2h4"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h3m-3 4h5m-5 4h5"></path></svg>
+                    <div class="w-14 h-14 bg-blue-500/10 rounded-3xl flex items-center justify-center text-blue-400">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2z"></path></svg>
                     </div>
                     <div>
                         <h3 class="font-extrabold text-white text-xl tracking-tight uppercase">Note Stratégique M57</h3>
-                        <p class="text-[9px] text-blue-400 font-black uppercase tracking-widest">Signé : Hedi Mechichi</p>
+                        <p class="text-[9px] text-blue-400 font-black uppercase tracking-widest">Expertise : Hedi Mechichi</p>
                     </div>
                 </div>
 
                 <div id="aiLoading" class="hidden py-12 text-center">
                     <div class="inline-block w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                    <p class="mt-6 text-sm text-slate-500 italic font-bold">Consolidation des ratios en cours...</p>
+                    <p class="mt-6 text-sm text-slate-500 italic font-bold">Consolidation des scénarios conjoncturels...</p>
                 </div>
 
-                <div id="aiContent" class="memo-text text-slate-200 leading-relaxed text-base font-medium">
-                    <!-- Contenu IA -->
-                </div>
+                <div id="aiContent" class="memo-text text-slate-200 leading-relaxed text-base font-medium"></div>
             </div>
 
-            <!-- Vision Urbaine -->
             <div id="imageBox" class="relative group hidden overflow-hidden rounded-[3.5rem]">
                 <img id="visionImage" class="w-full h-80 object-cover border border-white/10 shadow-2xl transition-transform duration-1000 group-hover:scale-110" src="" alt="Vigneux Vision">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80"></div>
                 <div class="absolute bottom-8 left-10 right-10">
                     <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-2">Projection Architectural</p>
-                    <p class="text-sm text-white font-semibold italic">"Modernisation et transition écologique du territoire de Vigneux-sur-Seine."</p>
+                    <p class="text-sm text-white font-semibold italic">"Transition écologique et modernisation du territoire."</p>
                 </div>
             </div>
         </div>
@@ -183,17 +203,29 @@
             const tax = parseFloat(document.getElementById('taxSlider').value);
             const investTotal = parseFloat(document.getElementById('investSlider').value);
             const subRate = parseFloat(document.getElementById('subSlider').value);
+            
+            // Advanced Inputs
+            const inflation = parseFloat(document.getElementById('inflationInput').value) / 100 || 0;
+            const gvt = parseFloat(document.getElementById('gvtInput').value) / 100 || 0;
+            const newRate = parseFloat(document.getElementById('rateInput').value) / 100 || 0.035;
 
             document.getElementById('taxVal').innerText = (tax >= 0 ? '+' : '') + tax + '%';
             document.getElementById('investVal').innerText = investTotal + " M€";
             document.getElementById('subVal').innerText = subRate + "%";
 
+            // Calculation Logic (Refined with Advanced Inputs)
+            // We assume payroll is 60% of expenses and energy/supply 40%
             const r = BASE_R * (1 + (tax / 100));
-            const e = r - BASE_D;
+            const inflationImpact = (BASE_D * 0.4 * inflation);
+            const gvtImpact = (BASE_D * 0.6 * gvt);
+            const adjusted_D = BASE_D + inflationImpact + gvtImpact;
+            
+            const e = r - adjusted_D;
             const subventions = investTotal * (subRate / 100);
             const resteAFinancer = Math.max(0, investTotal - subventions);
             
-            const caf = Math.max(0, e - 1.5 - (resteAFinancer * 0.038)); 
+            // Debt service impact based on new rates
+            const caf = Math.max(0, e - 1.5 - (resteAFinancer * newRate)); 
             const ratio = e > 0.1 ? ((STOCK_DETTE + resteAFinancer) / e) : 50;
 
             document.getElementById('metricCAF').innerText = caf.toFixed(2) + " M€";
@@ -208,23 +240,25 @@
                 indicator.className = "w-4 h-4 rounded-full transition-all status-glow-red bg-rose-500"; 
             }
 
-            mainChart.data.datasets[0].data = [3.4, e, e*1.02, e*1.04, e*1.06, e*1.08];
+            mainChart.data.datasets[0].data = [3.4, e, e*(1.01-inflation), e*(1.02-inflation), e*(1.03-inflation), e*(1.04-inflation)];
             mainChart.update();
 
-            metrics = { r, e, caf, ratio, investTotal, subRate, tax, resteAFinancer };
+            metrics = { r, e, caf, ratio, investTotal, subRate, tax, resteAFinancer, inflation, gvt, newRate };
         }
 
-        ['taxSlider', 'investSlider', 'subSlider'].forEach(id => document.getElementById(id).addEventListener('input', update));
+        ['taxSlider', 'investSlider', 'subSlider', 'inflationInput', 'gvtInput', 'rateInput'].forEach(id => {
+            document.getElementById(id).addEventListener('input', update);
+        });
 
         function generateLocalStrategicNote(m) {
-            let note = `<p><strong>Diagnostic de la Direction :</strong> La trajectoire simulée pour un investissement de <strong>${m.investTotal} M€</strong> dégage une épargne brute de <strong>${m.e.toFixed(2)} M€</strong>.</p>`;
+            let note = `<p><strong>Diagnostic de la Direction :</strong> Dans un contexte d'inflation à <strong>${(m.inflation*100).toFixed(1)}%</strong> et de GVT à <strong>${(m.gvt*100).toFixed(1)}%</strong>, le budget dégage une épargne brute de <strong>${m.e.toFixed(2)} M€</strong>.</p>`;
             
             if (m.ratio > 12) {
-                note += `<p class="verdict-red">⚠️ ANALYSE D'ALERTE : En tant que Directeur Financier, je pose un avis défavorable. Avec un délai de désendettement de <strong>${m.ratio.toFixed(1)} ans</strong>, la ville franchit le seuil de solvabilité critique. L'autofinancement net est saturé.</p>`;
+                note += `<p class="verdict-red">⚠️ ALERTE : Scénario non soutenable. La dégradation du ratio de désendettement à <strong>${m.ratio.toFixed(1)} ans</strong> hypothèque toute nouvelle phase d'investissement.</p>`;
             } else if (m.ratio > 10) {
-                note += `<p class="text-orange-400 font-bold">⚠️ VIGILANCE : Le ratio de <strong>${m.ratio.toFixed(1)} ans</strong> nous place dans la zone de surveillance. Il est impératif de sécuriser au moins 60% de subventions pour ce projet.</p>`;
+                note += `<p class="text-orange-400 font-bold">⚠️ VIGILANCE : Pilotage sous tension. Les effets de bords conjoncturels réduisent notre CAF nette à ${m.caf.toFixed(2)} M€.</p>`;
             } else {
-                note += `<p class="verdict-green">✅ VALIDATION : Scénario soutenable. Un ratio de <strong>${m.ratio.toFixed(1)} ans</strong> permet de préserver la capacité d'investissement future tout en réalisant le programme de mandat.</p>`;
+                note += `<p class="verdict-green">✅ VALIDATION : Malgré les contraintes de conjoncture, le ratio de <strong>${m.ratio.toFixed(1)} ans</strong> reste compatible avec une signature saine.</p>`;
             }
             return note;
         }
@@ -243,11 +277,10 @@
             content.classList.add('hidden');
             imgBox.classList.add('hidden');
 
-            const sysPrompt = `Tu es Hedi Mechichi, Directeur des Finances expert de Vigneux-sur-Seine. Rédige une note administrative M57 courte (3 points). Ton verdict doit être : REJETÉ si ratio > 12 ou CAF < 1.0, VALIDÉ si ratio < 9. Ne signe pas à la fin du texte car ton nom est déjà présent dans l'interface.`;
-            const userPrompt = `Simulation : Investissement ${metrics.investTotal}M€, Fiscalité ${metrics.tax}%, CAF Nette ${metrics.caf.toFixed(2)}M€, Désendettement ${metrics.ratio.toFixed(1)}ans. Verdict ?`;
+            const sysPrompt = `Tu es Hedi Mechichi, Directeur des Finances expert. Analyse l'impact de l'inflation (${(metrics.inflation*100).toFixed(1)}%) et du GVT (${(metrics.gvt*100).toFixed(1)}%) sur le projet d'investissement de ${metrics.investTotal}M€. Verdict technique court (VALIDÉ ou REJETÉ).`;
+            const userPrompt = `Simulation : CAF Nette ${metrics.caf.toFixed(2)}M€, Désendettement ${metrics.ratio.toFixed(1)}ans. Quel est l'avis du CFO ?`;
 
             try {
-                // Appel Gemini
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -262,12 +295,10 @@
                     return `<p class="${cls}">${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</p>`;
                 }).join('');
 
-                // Image IA (Fallback nano-banana)
-                const imgPrompt = `Cinematic 8k architectural concept of a modern sustainable public building in Vigneux-sur-Seine France, with gardens and solar panels, dusk.`;
                 const imgRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ instances: { prompt: imgPrompt }, parameters: { sampleCount: 1 } })
+                    body: JSON.stringify({ instances: { prompt: "Eco-friendly modern primary school building in France, sunny day, architectural photorealism." }, parameters: { sampleCount: 1 } })
                 }).then(r => r.json());
 
                 if (imgRes.predictions?.[0]?.bytesBase64Encoded) {
